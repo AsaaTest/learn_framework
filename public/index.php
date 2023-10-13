@@ -23,7 +23,7 @@ $router->post('/test', function () {
 // execute routes with try-catch
 try {
     // get the action of the route requested
-    $action = $router->resolve();
+    $action = $router->resolve($_SERVER["REQUEST_URI"], $_SERVER["REQUEST_METHOD"]);
     // execute action
     print($action());
 } catch (HttpNotFoundException $e) {
