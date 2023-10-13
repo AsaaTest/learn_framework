@@ -36,12 +36,8 @@ class Router
      *
      * @return void
      */
-    public function resolve()
+    public function resolve(string $uri, string $method)
     {
-        // get method 
-        $method = $_SERVER["REQUEST_METHOD"];
-        //get uri
-        $uri = $_SERVER["REQUEST_URI"];
         // get action of array routes
         $action = $this->routes[$method][$uri] ?? null;
         // is null set an exception
