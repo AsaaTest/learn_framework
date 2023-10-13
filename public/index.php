@@ -1,7 +1,12 @@
 <?php
 // import required class
-require_once './helpers.php';
-require_once './Router.php';
+use Learn\HttpNotFoundException;
+use Learn\Router;
+// require autoload of composer
+require_once '../vendor/autoload.php';
+// require helpers
+require_once '../src/Learn/helpers.php';
+
 //define class Router
 $router = new Router();
 // define routes

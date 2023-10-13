@@ -1,0 +1,18 @@
+{
+    "name": "abelacostaec/learn-framework",
+    "description": "guide to reate a basic framework in php",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Learn\\": "src/Learn"
+        }
+    },
+    "authors": [
+        {
+            "name": "AsaaTest",
+            "email": "abelcoc06@gmail.com"
+        }
+    ],
+    "require": {}
+}

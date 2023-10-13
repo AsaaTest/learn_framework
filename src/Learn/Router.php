@@ -1,5 +1,7 @@
 <?php
-require_once './HttpNotFoundException.php';
+
+namespace Learn;
+
 /**
  * Class Router
  * 
@@ -34,7 +36,8 @@ class Router
      *
      * @return void
      */
-    public function resolve(){
+    public function resolve()
+    {
         // get method 
         $method = $_SERVER["REQUEST_METHOD"];
         //get uri
@@ -42,7 +45,7 @@ class Router
         // get action of array routes
         $action = $this->routes[$method][$uri] ?? null;
         // is null set an exception
-        if(is_null($action)){
+        if (is_null($action)) {
             throw new HttpNotFoundException();
         }
         // return action
@@ -108,5 +111,4 @@ class Router
     {
         $this->routes['DELETE'][$uri] = $action;
     }
-
 }
