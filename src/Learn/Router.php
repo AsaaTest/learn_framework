@@ -2,6 +2,8 @@
 
 namespace Learn;
 
+use Learn\Route;
+
 /**
  * Class Router
  * 
@@ -32,79 +34,101 @@ class Router
     }
 
     /**
-     * Resolve route, get the action of route requested
+     * Resolve a route and get the action for the requested route.
      *
-     * @return void
+     * @param string $uri   The URI of the requested route.
+     * @param string $method The HTTP method (e.g., GET, POST) used for the request.
+     *
+     * @return mixed
      */
     public function resolve(string $uri, string $method)
     {
-        // get action of array routes
-        $action = $this->routes[$method][$uri] ?? null;
-        // is null set an exception
-        if (is_null($action)) {
-            throw new HttpNotFoundException();
+        // Iterate over the registered routes for the specific HTTP method.
+        foreach ($this->routes[$method] as $route) {
+            // Check if the route matches the requested URI using the "matches" method of the "Route" class.
+            if ($route->matches($uri)) {
+                return $route; // Return the matching route.
+            }
         }
-        // return action
-        return $action;
+        throw new HttpNotFoundException(); // Throw an exception if no matching route is found.
     }
 
     /**
-     * Method get storage route for method GET
+     * Method for registering a route for the GET HTTP method.
      *
-     * @param string $uri
-     * @param callable $action
+     * @param string $uri    The URI of the route.
+     * @param callable $action A callback function or closure associated with the route.
+     *
      * @return void
      */
     public function get(string $uri, callable $action)
     {
-        $this->routes['GET'][$uri] = $action;
+        $this->registerRoute("GET", $uri, $action);
     }
 
     /**
-     * Method get storage route for method POST
+     * Method for registering a route for the POST HTTP method.
      *
-     * @param string $uri
-     * @param callable $action
+     * @param string $uri    The URI of the route.
+     * @param callable $action A callback function or closure associated with the route.
+     *
      * @return void
      */
     public function post(string $uri, callable $action)
     {
-        $this->routes['POST'][$uri] = $action;
+        $this->registerRoute("POST", $uri, $action);
     }
 
     /**
-     * Method get storage route for method PUT
+     * Method for registering a route for the PUT HTTP method.
      *
-     * @param string $uri
-     * @param callable $action
+     * @param string $uri    The URI of the route.
+     * @param callable $action A callback function or closure associated with the route.
+     *
      * @return void
      */
     public function put(string $uri, callable $action)
     {
-        $this->routes['PUT'][$uri] = $action;
+        $this->registerRoute("PUT", $uri, $action);
     }
 
     /**
-     * Method get storage route for method PATCH
+     * Method for registering a route for the PATCH HTTP method.
      *
-     * @param string $uri
-     * @param callable $action
+     * @param string $uri    The URI of the route.
+     * @param callable $action A callback function or closure associated with the route.
+     *
      * @return void
      */
     public function patch(string $uri, callable $action)
     {
-        $this->routes['PATCH'][$uri] = $action;
+        $this->registerRoute("PATCH", $uri, $action);
     }
 
     /**
-     * Method get storage route for method DELETE
+     * Method for registering a route for the DELETE HTTP method.
      *
-     * @param string $uri
-     * @param callable $action
+     * @param string $uri    The URI of the route.
+     * @param callable $action A callback function or closure associated with the route.
+     *
      * @return void
      */
     public function delete(string $uri, callable $action)
     {
-        $this->routes['DELETE'][$uri] = $action;
+        $this->registerRoute("DELETE", $uri, $action);
+    }
+
+    /**
+     * Register new route in router
+     *
+     * @param string $method HTTP method
+     * @param string $uri URI of the route
+     * @param \Closure|array $action action associed to route
+     */
+    protected function registerRoute(string $method, string $uri, \Closure|array $action)
+    {
+        $route = new Route($uri, $action);
+        // Crea un nuevo objeto "Route" con la URI y la acción proporcionadas y lo agrega al array de rutas.
+        $this->routes[$method][] = $route;
     }
 }
