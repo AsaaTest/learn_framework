@@ -10,7 +10,7 @@ require_once '../src/Learn/helpers.php';
 //define class Router
 $router = new Router();
 // define routes
-$router->get('/test', function () {
+$router->get('/test/{test}', function () {
     return "GET Ok";
 });
 
@@ -23,7 +23,8 @@ $router->post('/test', function () {
 // execute routes with try-catch
 try {
     // get the action of the route requested
-    $action = $router->resolve($_SERVER["REQUEST_URI"], $_SERVER["REQUEST_METHOD"]);
+    $route = $router->resolve($_SERVER["REQUEST_URI"], $_SERVER["REQUEST_METHOD"]);
+    $action = $route->action();
     // execute action
     print($action());
 } catch (HttpNotFoundException $e) {
