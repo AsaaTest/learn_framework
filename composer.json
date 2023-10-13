@@ -8,11 +8,19 @@
             "Learn\\": "src/Learn"
         }
     },
+    "scripts": {
+        "tests": "phpunit --color=always --testdox tests/"
+    },
+    "autoload-dev": {
+        "Learn\\Tests\\": "tests"
+    },
     "authors": [
         {
             "name": "AsaaTest",
             "email": "abelcoc06@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^10.4"
+    }
 }
