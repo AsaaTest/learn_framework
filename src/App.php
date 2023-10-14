@@ -2,6 +2,7 @@
 
 namespace Learn;
 
+use Learn\Container\Container;
 use Learn\Http\HttpNotFoundException;
 use Learn\Http\Request;
 use Learn\Http\Response;
@@ -14,7 +15,7 @@ use Learn\Server\Server;
  */
 class App
 {
-    /**S
+    /**
      * The root path of the application.
      *
      * @var string
@@ -42,13 +43,27 @@ class App
      */
     public Server $server;
 
-    public function __construct()
+    /**
+     * Bootstrap method.
+     *
+     * Initializes and configures the application.
+     *
+     * @return App The configured application instance.
+     */
+    public static function bootstrap(): App
     {
-        $this->router = new Router();
-        $this->server = new PhpNativeServer();
-        $this->request = $this->server->getRequest();
+        $app = Container::singleton(self::class);
+        $app->router = new Router();
+        $app->server = new PhpNativeServer();
+        $app->request = $app->server->getRequest();
+        return $app;
     }
 
+    /**
+     * Run the application.
+     *
+     * This method is responsible for handling HTTP requests and responses.
+     */
     public function run()
     {
         try {
