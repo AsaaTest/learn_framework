@@ -9,7 +9,7 @@ use Learn\Server\PhpNativeServer;
 // require autoload of composer
 require_once '../vendor/autoload.php';
 // require helpers
-require_once '../src/Learn/Helpers/helpers.php';
+require_once '../src/Helpers/helpers.php';
 
 //define class Router
 $router = new Router();
