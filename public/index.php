@@ -3,6 +3,7 @@
 
 use Learn\Http\HttpNotFoundException;
 use Learn\Http\Request;
+use Learn\Http\Response;
 use Learn\Routing\Router;
 use Learn\Server\PhpNativeServer;
 
@@ -15,7 +16,11 @@ require_once '../src/Helpers/helpers.php';
 $router = new Router();
 // define routes
 $router->get('/test/{test}', function () {
-    return "GET Ok";
+    $response = new Response();
+    $response->setHeader("Content-Type", "application/json");
+    $response->setContent(json_encode(["msg" => "get ok"]));
+
+    return $response;
 });
 
 $router->get('/test2', function () {
@@ -24,15 +29,20 @@ $router->get('/test2', function () {
 $router->post('/test', function () {
     return "POST Ok";
 });
+// define server
+$server = new PhpNativeServer();
 // execute routes with try-catch
 try {
     // get the action of the route requested
-    $route = $router->resolve(new Request(new PhpNativeServer()));
+    $request = new Request($server);
+    $route = $router->resolve($request);
     $action = $route->action();
-    // execute action
-    print($action());
+    $response = $action($request);
+    $server->sendResponse($response);
 } catch (HttpNotFoundException $e) {
     // If not found route print message and header HTTP 404
-    print('Not Found');
-    http_response_code(404);
+    $response = new Response();
+    $response->setStatus(404);
+    $response->setContent("Not Found");
+    $server->sendResponse($response);
 }
