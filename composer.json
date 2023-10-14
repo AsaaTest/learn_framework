@@ -9,10 +9,13 @@
         }
     },
     "scripts": {
-        "tests": "phpunit --color=always --testdox tests/"
+        "tests": "phpunit --color=always --testdox tests/",
+        "fixer-php": ["php-cs-fixer fix src/ ","php-cs-fixer fix tests/"]
     },
     "autoload-dev": {
-        "Learn\\Tests\\": "tests"
+        "psr-4": {
+            "Learn\\Tests\\": "tests"
+        }
     },
     "authors": [
         {
@@ -21,6 +24,7 @@
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "^10.4"
+        "phpunit/phpunit": "^10.4",
+        "friendsofphp/php-cs-fixer": "^3.35"
     }
 }
