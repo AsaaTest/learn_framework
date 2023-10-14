@@ -16,18 +16,14 @@ require_once '../src/Helpers/helpers.php';
 $router = new Router();
 // define routes
 $router->get('/test/{test}', function () {
-    $response = new Response();
-    $response->setHeader("Content-Type", "application/json");
-    $response->setContent(json_encode(["msg" => "get ok"]));
-
-    return $response;
+    return Response::json(['msg' => "Get Ok"]);
 });
 
-$router->get('/test2', function () {
-    return "GET2 Ok";
+$router->get('/redirect', function () {
+    return Response::redirect('/test/4');
 });
 $router->post('/test', function () {
-    return "POST Ok";
+    return Response::text('POST Ok');
 });
 // define server
 $server = new PhpNativeServer();
@@ -41,8 +37,5 @@ try {
     $server->sendResponse($response);
 } catch (HttpNotFoundException $e) {
     // If not found route print message and header HTTP 404
-    $response = new Response();
-    $response->setStatus(404);
-    $response->setContent("Not Found");
-    $server->sendResponse($response);
+    $server->sendResponse(Response::text("Not Found")->setStatus(404));
 }
