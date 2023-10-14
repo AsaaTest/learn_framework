@@ -1,10 +1,10 @@
 <?php
 
-namespace Learn\Tests;
+namespace Learn\Tests\Routing;
 
-use Learn\Request;
-use Learn\Router;
-use Learn\Server;
+use Learn\Http\Request;
+use Learn\Routing\Router;
+use Learn\Server\Server;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase

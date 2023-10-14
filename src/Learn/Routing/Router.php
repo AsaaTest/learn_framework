@@ -1,8 +1,10 @@
 <?php
 
-namespace Learn;
+namespace Learn\Routing;
 
-use Learn\Route;
+use Learn\Http\Request;
+use Learn\Routing\Route;
+use Learn\Http\HttpNotFoundException;
 
 /**
  * Class Router
@@ -37,7 +39,7 @@ class Router
      * Resolve a route and get the action for the requested route.
      *
      * @param Request $request
-     * @return void
+     * @return mixed
      */
     public function resolve(Request $request)
     {

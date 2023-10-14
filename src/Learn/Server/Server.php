@@ -1,6 +1,6 @@
 <?php
 
-namespace Learn;
+namespace Learn\Server;
 
 /**
  * Interface for implements a Server

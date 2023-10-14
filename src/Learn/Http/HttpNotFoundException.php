@@ -1,6 +1,6 @@
 <?php
 
-namespace Learn;
+namespace Learn\Http;
 
 /**
  * Class  HttpNotFoundException

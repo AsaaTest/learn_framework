@@ -1,6 +1,8 @@
 <?php
 
-namespace Learn;
+namespace Learn\Http;
+
+use Learn\Server\Server;
 
 class Request
 {

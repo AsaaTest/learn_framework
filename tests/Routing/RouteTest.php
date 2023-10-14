@@ -1,8 +1,8 @@
 <?php
 
-namespace Learn\Tests;
+namespace Learn\Tests\Routing;
 
-use Learn\Route;
+use Learn\Routing\Route;
 use PHPUnit\Framework\TestCase;
 
 class RouteTest extends TestCase

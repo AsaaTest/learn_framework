@@ -1,6 +1,8 @@
 <?php
 
-namespace Learn;
+namespace Learn\Server;
+
+use Learn\Server\Server;
 
 class PhpNativeServer implements Server
 {

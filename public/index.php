@@ -1,14 +1,15 @@
 <?php
 // import required class
-use Learn\HttpNotFoundException;
-use Learn\PhpNativeServer;
-use Learn\Request;
-use Learn\Router;
+
+use Learn\Http\HttpNotFoundException;
+use Learn\Http\Request;
+use Learn\Routing\Router;
+use Learn\Server\PhpNativeServer;
 
 // require autoload of composer
 require_once '../vendor/autoload.php';
 // require helpers
-require_once '../src/Learn/helpers.php';
+require_once '../src/Learn/Helpers/helpers.php';
 
 //define class Router
 $router = new Router();
