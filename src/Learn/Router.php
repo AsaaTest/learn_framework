@@ -36,17 +36,15 @@ class Router
     /**
      * Resolve a route and get the action for the requested route.
      *
-     * @param string $uri   The URI of the requested route.
-     * @param string $method The HTTP method (e.g., GET, POST) used for the request.
-     *
-     * @return mixed
+     * @param Request $request
+     * @return void
      */
-    public function resolve(string $uri, string $method)
+    public function resolve(Request $request)
     {
         // Iterate over the registered routes for the specific HTTP method.
-        foreach ($this->routes[$method] as $route) {
+        foreach ($this->routes[$request->method()] as $route) {
             // Check if the route matches the requested URI using the "matches" method of the "Route" class.
-            if ($route->matches($uri)) {
+            if ($route->matches($request->uri())) {
                 return $route; // Return the matching route.
             }
         }
