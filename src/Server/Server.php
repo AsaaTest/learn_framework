@@ -2,6 +2,7 @@
 
 namespace Learn\Server;
 
+use Learn\Http\Request;
 use Learn\Http\Response;
 
 /**
@@ -10,35 +11,14 @@ use Learn\Http\Response;
 interface Server
 {
     /**
-     * Set Uri
+     * Get request send by client
      *
-     * @return string
+     * @return Request
      */
-    public function requestUri(): string;
+    public function getRequest(): Request;
 
     /**
-     * Set Method
-     *
-     * @return string
-     */
-    public function requestMethod(): string;
-
-    /**
-     * Set data of POST
-     *
-     * @return array
-     */
-    public function postData(): array;
-
-    /**
-     * Set data of GET
-     *
-     * @return array
-     */
-    public function queryParams(): array;
-
-    /**
-     * process the send response 
+     * process the send response
      *
      * @param Response $response
      * @return void
