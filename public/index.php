@@ -1,9 +1,9 @@
 <?php
 // import required class
 use Learn\HttpNotFoundException;
+use Learn\PhpNativeServer;
 use Learn\Request;
 use Learn\Router;
-use Learn\Server;
 
 // require autoload of composer
 require_once '../vendor/autoload.php';
@@ -26,7 +26,7 @@ $router->post('/test', function () {
 // execute routes with try-catch
 try {
     // get the action of the route requested
-    $route = $router->resolve(new Request(new Server()));
+    $route = $router->resolve(new Request(new PhpNativeServer()));
     $action = $route->action();
     // execute action
     print($action());
