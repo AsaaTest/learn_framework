@@ -6,7 +6,7 @@ use Learn\Route;
 
 /**
  * Class Router
- * 
+ *
  * handle routes
  */
 class Router
@@ -23,7 +23,7 @@ class Router
      */
     public function __construct()
     {
-        // define array with main methods http 
+        // define array with main methods http
         $this->routes = [
             "GET" => [],
             "POST" => [],
