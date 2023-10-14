@@ -2,45 +2,36 @@
 
 namespace Learn;
 
-class Server
+/**
+ * Interface for implements a Server
+ */
+interface Server
 {
     /**
-     * Get Uri of Server
+     * Set Uri
      *
      * @return string
      */
-    public function requestUri(): string
-    {
-        return parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
-    }
+    public function requestUri(): string;
 
     /**
-     * Get method of Server
+     * Set Method
      *
      * @return string
      */
-    public function requestMethod(): string
-    {
-        return $_SERVER["REQUEST_METHOD"];
-    }
+    public function requestMethod(): string;
 
     /**
-     * Ger Post data send by route
+     * Set data of POST
      *
      * @return array
      */
-    public function postData(): array
-    {
-        return $_POST;
-    }
+    public function postData(): array;
 
     /**
-     * Get data of _GET send in route
+     * Set data of GET
      *
      * @return array
      */
-    public function queryParams(): array
-    {
-        return $_GET;
-    }
+    public function queryParams(): array;
 }
