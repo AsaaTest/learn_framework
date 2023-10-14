@@ -2,11 +2,21 @@
 
 namespace Learn\Tests;
 
+use Learn\Request;
 use Learn\Router;
+use Learn\Server;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
+    private function createMockRequest(string $uri, string $method): Request
+    {
+        $mock = $this->getMockBuilder(Server::class)->getMock();
+        $mock->method('requestUri')->willReturn($uri);
+        $mock->method('requestMethod')->willReturn($method);
+        return new Request($mock);
+    }
+
     /**
      * Prueba para resolver una ruta básica con una acción de devolución de llamada.
      */
@@ -25,7 +35,7 @@ class RouterTest extends TestCase
         // Registra la ruta y su acción asociada en el enrutador utilizando el método "get".
         $router->get($uri, $action);
         // Resuelve la ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP (GET).
-        $route = $router->resolve($uri, 'GET');
+        $route = $router->resolve($this->createMockRequest($uri, 'GET'));
         // Verifica que la ruta resuelta tenga la misma URI y acción que las registradas previamente.
         $this->assertEquals($uri, $route->uri());
         $this->assertEquals($action, $route->action());
@@ -55,7 +65,7 @@ class RouterTest extends TestCase
         // Resuelve cada ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP (GET).
         foreach ($routes as $uri => $action) {
             // Resuelve la ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP (GET).
-            $route = $router->resolve($uri, 'GET');
+            $route = $router->resolve($this->createMockRequest($uri, 'GET'));
             // Verifica que la ruta resuelta tenga la misma URI y acción que las registradas previamente.
             $this->assertEquals($uri, $route->uri());
             $this->assertEquals($action, $route->action());
@@ -93,7 +103,7 @@ class RouterTest extends TestCase
 
         // Resuelve cada ruta utilizando un objeto de solicitud simulado (MockRequest) que contiene la URI y el método HTTP correspondiente.
         foreach ($routes as [$method, $uri, $action]) {
-            $route = $router->resolve($uri, $method);
+            $route = $router->resolve($this->createMockRequest($uri, $method));
 
             // Verifica que cada ruta resuelta tenga la misma URI y acción que las registradas previamente.
             $this->assertEquals($uri, $route->uri());
