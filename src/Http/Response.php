@@ -10,7 +10,7 @@ class Response
      * @var integer
      */
     protected int $status = 200;
-    
+
     /**
      * headers of response
      *
@@ -39,11 +39,12 @@ class Response
      * setter status
      *
      * @param integer $status
-     * @return void
+     * @return self
      */
-    public function setStatus(int $status)
+    public function setStatus(int $status): self
     {
-        $this->status = $status;       
+        $this->status = $status;
+        return $this;
     }
 
     /**
@@ -55,11 +56,11 @@ class Response
     public function headers(?string $key = null): array|string|null
     {
         return $this->headers;
-        /* if (is_null($key)) {
+        if (is_null($key)) {
             return $this->headers;
         }
 
-        return $this->headers[strtolower($key)] ?? null; */
+        return $this->headers[strtolower($key)] ?? null;
     }
 
     /**
@@ -67,11 +68,12 @@ class Response
      *
      * @param string $header
      * @param string $value
-     * @return void
+     * @return self
      */
-    public function setHeader(string $header, string $value)
+    public function setHeader(string $header, string $value): self
     {
         $this->headers[strtolower($header)] = $value;
+        return $this;
     }
 
     /**
@@ -86,14 +88,15 @@ class Response
     }
 
     /**
-     * set type of content 
+     * set type of content
      *
      * @param string $value
-     * @return void
+     * @return self
      */
-    public function setContentType(string $value)
+    public function setContentType(string $value): self
     {
-        $this->setHeader("Content-Type", $value);       
+        $this->setHeader("Content-Type", $value);
+        return $this;
     }
 
     /**
@@ -110,16 +113,17 @@ class Response
      * setter content
      *
      * @param string $content
-     * @return void
+     * @return self
      */
-    public function setContent(string $content)
+    public function setContent(string $content): self
     {
-        $this->content = $content;       
+        $this->content = $content;
+        return $this;
     }
 
     /**
      * Prepare response
-     * 
+     *
      * remove headers if content is null
      * definer content length depending of the content
      *
@@ -133,5 +137,44 @@ class Response
         } else {
             $this->setHeader("Content-Length", strlen($this->content));
         }
+    }
+
+    /**
+     * Create a new instance of the Response class with content in JSON format.
+     *
+     * @param array $data An array of data to be converted to JSON format.
+     * @return self An instance of the Response class with content in JSON format.
+     */
+    public static function json(array $data): self
+    {
+        return (new self())
+            ->setContentType("application/json")
+            ->setContent(json_encode($data));
+    }
+
+    /**
+     * Create a new instance of the Response class with plain text content.
+     *
+     * @param string $text Text to set as content.
+     * @return self An instance of the Response class with plain text content.
+     */
+    public static function text(string $text): self
+    {
+        return (new self())
+            ->setContentType("text/plain")
+            ->setContent($text);
+    }
+
+    /**
+     * Create a new instance of the Response class to redirect to another URI.
+     *
+     * @param string $uri The URI to which the response should be redirected.
+     * @return self An instance of the Response class for redirection.
+     */
+    public static function redirect(string $uri): self
+    {
+        return (new self())
+            ->setStatus(302) // Set the HTTP status code for redirection (302 Found).
+            ->setHeader("Location", $uri); // Set the "Location" header to specify the redirection target.
     }
 }
