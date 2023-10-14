@@ -15,23 +15,24 @@ require_once '../src/Helpers/helpers.php';
 //define class Router
 $router = new Router();
 // define routes
-$router->get('/test/{test}', function () {
-    return Response::json(['msg' => "Get Ok"]);
+$router->get('/test/{test}', function (Request $request) {
+    return Response::json($request->routeParameters());
 });
 
-$router->get('/redirect', function () {
+$router->get('/redirect', function (Request $request) {
     return Response::redirect('/test/4');
 });
-$router->post('/test', function () {
-    return Response::text('POST Ok');
+$router->post('/test', function (Request $request) {
+    return Response::json($request->query());
 });
 // define server
 $server = new PhpNativeServer();
 // execute routes with try-catch
 try {
     // get the action of the route requested
-    $request = new Request($server);
+    $request = $server->getRequest();
     $route = $router->resolve($request);
+    $request->setRoute($route);
     $action = $route->action();
     $response = $action($request);
     $server->sendResponse($response);
