@@ -10,7 +10,8 @@
     },
     "scripts": {
         "tests": "phpunit --color=always --testdox tests/",
-        "fixer-php": ["php-cs-fixer fix src/ ","php-cs-fixer fix tests/"]
+        "fixer-php": ["php-cs-fixer fix src/ ","php-cs-fixer fix tests/"],
+        "documentor": "./phpDocumentor.phar -d src/ -t docs"
     },
     "autoload-dev": {
         "psr-4": {
