@@ -3,6 +3,7 @@
 namespace Learn\Tests\Routing;
 
 use Learn\Http\Request;
+use Learn\Http\Response;
 use Learn\Routing\Router;
 use Learn\Server\Server;
 use PHPUnit\Framework\TestCase;
@@ -109,4 +110,92 @@ class RouterTest extends TestCase
             $this->assertEquals($action, $route->action());
         }
     }
+
+    /**
+ * Test the execution of a chain of middlewares.
+ */
+    public function test_run_middlewares()
+    {
+        // Define a test middleware 1 that adds a custom header 'x-test-one'.
+        $middleware1 = new class () {
+            public function handle(Request $request, \Closure $next): Response
+            {
+                $response = $next($request);
+                $response->setHeader('x-test-one', 'one');
+                return $response;
+            }
+        };
+
+        // Define a test middleware 2 that adds a custom header 'x-test-two'.
+        $middleware2 = new class () {
+            public function handle(Request $request, \Closure $next): Response
+            {
+                $response = $next($request);
+                $response->setHeader('x-test-two', 'two');
+                return $response;
+            }
+        };
+
+        // Create a router instance.
+        $router = new Router();
+
+        // Define a URI and an expected response.
+        $uri = '/test';
+        $expectedResponse = Response::text("test");
+
+        // Register a GET route with middlewares.
+        $router->get($uri, fn ($request) => $expectedResponse)
+            ->setMiddlewares([$middleware1, $middleware2]);
+
+        // Resolve the route with a mock request.
+        $response = $router->resolve($this->createMockRequest($uri, 'GET'));
+
+        // Perform assertions.
+        $this->assertEquals($expectedResponse, $response);
+        $this->assertEquals($response->headers('x-test-one'), 'one');
+        $this->assertEquals($response->headers('x-test-two'), 'two');
+    }
+
+    /**
+     * Test that a middleware can stop the execution of the middleware stack.
+     */
+    public function test_middleware_stack_can_be_stopped()
+    {
+        // Define a middleware that stops the middleware stack and returns a custom response.
+        $stopMiddleware = new class () {
+            public function handle(Request $request, \Closure $next): Response
+            {
+                return Response::text("Stopped");
+            }
+        };
+
+        // Define a test middleware 2 that adds a custom header 'x-test-two'.
+        $middleware2 = new class () {
+            public function handle(Request $request, \Closure $next): Response
+            {
+                $response = $next($request);
+                $response->setHeader('x-test-two', 'two');
+                return $response;
+            }
+        };
+
+        // Create a router instance.
+        $router = new Router();
+
+        // Define a URI and an unreachable response.
+        $uri = '/test';
+        $unreachableResponse = Response::text("Unreachable");
+
+        // Register a GET route with middlewares, including a middleware that stops the stack.
+        $router->get($uri, fn ($request) => $unreachableResponse)
+            ->setMiddlewares([$stopMiddleware, $middleware2]);
+
+        // Resolve the route with a mock request.
+        $response = $router->resolve($this->createMockRequest($uri, 'GET'));
+
+        // Perform assertions.
+        $this->assertEquals("Stopped", $response->content());
+        $this->assertNull($response->headers('x-test-two'));
+    }
+
 }
