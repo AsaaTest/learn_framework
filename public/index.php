@@ -54,7 +54,7 @@ Route::post('/validate', fn (Request $request) => json($request->validate(
     [
         'test' => 'required',
         'num' => 'number',
-        'email' => ['required_with:num', 'email']
+        'email' => 'required_with:num|email'
     ],
     [
         'email' => [
