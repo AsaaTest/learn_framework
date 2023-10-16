@@ -49,6 +49,7 @@ class AuthMiddleware implements Middleware
 Route::get('/middlewares', fn (Request $request) => Response::json(['msg' => 'ok middleware']))
     ->setMiddlewares([AuthMiddleware::class]);
 
+Route::get('/html', fn (Request $request) => Response::view('home', ['user' => 'Pedro']));
 
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
 $app->run();
