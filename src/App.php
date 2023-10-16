@@ -2,7 +2,6 @@
 
 namespace Learn;
 
-use Learn\Container\Container;
 use Learn\Http\HttpNotFoundException;
 use Learn\Http\Request;
 use Learn\Http\Response;
@@ -61,7 +60,7 @@ class App
      */
     public static function bootstrap(): App
     {
-        $app = Container::singleton(self::class);
+        $app = singleton(self::class);
         $app->router = new Router();
         $app->server = new PhpNativeServer();
         $app->request = $app->server->getRequest();
