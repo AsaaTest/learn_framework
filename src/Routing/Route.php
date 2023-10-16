@@ -84,10 +84,10 @@ class Route
     }
 
     /**
- * Get the array of middleware components.
- *
- * @return array An array containing middleware components.
- */
+     * Get the array of middleware components.
+     *
+     * @return array An array containing middleware components.
+     */
     public function middlewares(): array
     {
         return $this->middlewares;
@@ -155,16 +155,83 @@ class Route
         return array_combine($this->parameters, array_slice($arguments, 1));
     }
 
+    /**
+     * Define a new GET route using the static method.
+     *
+     * @param string $uri     The URI pattern to match.
+     * @param \Closure|array $action  The action associated with the route.
+     * @return Route A Route instance representing the newly defined GET route.
+     */
     public static function get(string $uri, \Closure|array $action): Route
     {
-        return Container::resolve(App::class)->router->get($uri, $action);
+        // Resolve the current application instance from the container and access its router.
+        $router = Container::resolve(App::class)->router;
+
+        // Define a new GET route using the provided URI pattern and action.
+        return $router->get($uri, $action);
     }
 
-
+    /**
+     * Define a new POST route using the static method.
+     *
+     * @param string $uri     The URI pattern to match.
+     * @param \Closure|array $action  The action associated with the route.
+     * @return Route A Route instance representing the newly defined POST route.
+     */
     public static function post(string $uri, \Closure|array $action): Route
     {
-        return Container::resolve(App::class)->router->post($uri, $action);
+        // Resolve the current application instance from the container and access its router.
+        $router = Container::resolve(App::class)->router;
+
+        // Define a new POST route using the provided URI pattern and action.
+        return $router->post($uri, $action);
     }
 
+    /**
+     * Define a new PUT route using the static method.
+     *
+     * @param string $uri     The URI pattern to match.
+     * @param \Closure|array $action  The action associated with the route.
+     * @return Route A Route instance representing the newly defined PUT route.
+     */
+    public static function put(string $uri, \Closure|array $action): Route
+    {
+        // Resolve the current application instance from the container and access its router.
+        $router = Container::resolve(App::class)->router;
 
+        // Define a new PUT route using the provided URI pattern and action.
+        return $router->put($uri, $action);
+    }
+
+    /**
+     * Define a new PATCH route using the static method.
+     *
+     * @param string $uri     The URI pattern to match.
+     * @param \Closure|array $action  The action associated with the route.
+     * @return Route A Route instance representing the newly defined PATCH route.
+     */
+    public static function patch(string $uri, \Closure|array $action): Route
+    {
+        // Resolve the current application instance from the container and access its router.
+        $router = Container::resolve(App::class)->router;
+
+        // Define a new PATCH route using the provided URI pattern and action.
+        return $router->patch($uri, $action);
+    }
+
+    /**
+     * Define a new DELETE route using the static method.
+     *
+     * @param string $uri     The URI pattern to match.
+     * @param \Closure|array $action  The action associated with the route.
+     * @return Route A Route instance representing the newly defined DELETE route.
+     */
+    public static function delete(string $uri, \Closure|array $action): Route
+    {
+        // Resolve the current application instance from the container and access its router.
+        $router = Container::resolve(App::class)->router;
+
+        // Define a new DELETE route using the provided URI pattern and action.
+        return $router->delete($uri, $action);
+    }
 }
