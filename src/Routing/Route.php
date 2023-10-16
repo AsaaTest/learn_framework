@@ -2,6 +2,9 @@
 
 namespace Learn\Routing;
 
+use Learn\App;
+use Learn\Container\Container;
+
 class Route
 {
     /**
@@ -32,6 +35,13 @@ class Route
      * @var array
      */
     protected array $parameters;
+
+    /**
+     * HTTP middlewares
+     *
+     * @var \Learn\Http\Middleware[]
+     */
+    protected array $middlewares = [];
 
     /**
      * Constructor of the Route class.
@@ -72,6 +82,41 @@ class Route
     {
         return $this->action;
     }
+
+    /**
+ * Get the array of middleware components.
+ *
+ * @return array An array containing middleware components.
+ */
+    public function middlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    /**
+     * Set the middleware components for this class.
+     *
+     * @param array $middlewares An array of middleware class names to set.
+     * @return self Returns the instance of the class after setting the middleware components.
+     */
+    public function setMiddlewares(array $middlewares): self
+    {
+        // Create instances of middleware classes using the provided class names.
+        $this->middlewares = array_map(fn ($middleware) => new $middleware(), $middlewares);
+        return $this;
+    }
+
+    /**
+     * Check if there are any middleware components assigned.
+     *
+     * @return bool True if there are middleware components, false otherwise.
+     */
+    public function hasMiddlewares(): bool
+    {
+        // Determine if there are any middleware components in the array.
+        return count($this->middlewares) > 0;
+    }
+
 
     /**
      * Check if the given URI matches the route.
