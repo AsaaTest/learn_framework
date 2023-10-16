@@ -2,11 +2,13 @@
 
 namespace Learn\Http;
 
+use Learn\Exceptions\LearnException;
+
 /**
  * Class  HttpNotFoundException
  *
  * Handle exceptions not found
  */
-class HttpNotFoundException extends \Exception
+class HttpNotFoundException extends LearnException
 {
 }
