@@ -55,9 +55,12 @@ class Validator
 
             // Validate the field against each of its rules.
             foreach ($rules as $rule) {
+                if(is_string($rule)) {
+                    $rule = Rule::from($rule);
+                }
                 if (!$rule->isValid($field, $this->data)) {
-                    $message = $messages[$field][$rule::class] ?? $rule->message();
-                    $fieldUnderValidationErrors[$rule::class] = $message;
+                    $message = $messages[$field][Rule::nameOf($rule)] ?? $rule->message();
+                    $fieldUnderValidationErrors[Rule::nameOf($rule)] = $message;
                 }
             }
 
@@ -66,7 +69,7 @@ class Validator
                 $errors[$field] = $fieldUnderValidationErrors;
             } else {
                 // The field has passed all validation rules; store it in the validated data.
-                $validated[$field] = $this->data[$field];
+                $validated[$field] = $this->data[$field] ?? null;
             }
         }
 
