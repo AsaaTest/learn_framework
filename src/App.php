@@ -8,8 +8,10 @@ use Learn\Http\Response;
 use Learn\Routing\Router;
 use Learn\Server\PhpNativeServer;
 use Learn\Server\Server;
+use Learn\Validation\Exceptions\ValidationException;
 use Learn\View\LearnEngine;
 use Learn\View\View;
+use Throwable;
 
 /**
  * Main application class responsible for handling HTTP requests and responses.
@@ -64,23 +66,53 @@ class App
         $app->router = new Router();
         $app->server = new PhpNativeServer();
         $app->request = $app->server->getRequest();
-        $app->view = new LearnEngine(__DIR__."/../views");
+        $app->view = new LearnEngine(__DIR__ . "/../views");
         return $app;
     }
 
     /**
      * Run the application.
      *
-     * This method is responsible for handling HTTP requests and responses.
+     * This method is responsible for handling HTTP requests and responses. It resolves routes, processes exceptions,
+     * and sends appropriate responses based on the outcome of the request handling.
+     *
+     * @throws HttpNotFoundException When the requested route is not found (HTTP 404).
+     * @throws ValidationException When validation of input data fails (HTTP 422).
+     * @throws Throwable When an unhandled exception occurs.
      */
     public function run()
     {
         try {
+            // Resolve the requested route and obtain the response.
             $response = $this->router->resolve($this->request);
+
+            // Send the response to the client.
             $this->server->sendResponse($response);
         } catch (HttpNotFoundException $e) {
-            $response = Response::text("Not Found")->setStatus(404);
-            $this->server->sendResponse($response);
+            // Handle HTTP 404 (Not Found) error by sending an appropriate response.
+            $this->abort(Response::text("Not Found")->setStatus(404));
+        } catch (ValidationException $e) {
+            // Handle validation errors by sending a JSON response with validation error details (HTTP 422).
+            $this->abort(json($e->errors())->setStatus(422));
+        } catch (Throwable $e) {
+            // Handle unhandled exceptions by sending a JSON response with error message and trace.
+            $response = json([
+                "message" => $e->getMessage(),
+                "trace" => $e->getTrace()
+            ]);
+            $this->abort($response);
         }
+    }
+
+    /**
+     * Abort the current request with a specified response.
+     *
+     * This method allows you to forcefully terminate the current request by sending a specific response.
+     *
+     * @param Response $response The response to be sent to the client to terminate the request.
+     */
+    public function abort(Response $response)
+    {
+        $this->server->sendResponse($response);
     }
 }
