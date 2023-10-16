@@ -6,7 +6,12 @@
     "autoload": {
         "psr-4": {
             "Learn\\": "src/"
-        }
+        },
+        "files": [
+            "src/Helpers/app.php",
+            "src/Helpers/http.php",
+            "src/Helpers/helpers.php"
+        ]
     },
     "scripts": {
         "tests": "phpunit --color=always --testdox tests/",
