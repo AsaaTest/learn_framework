@@ -10,7 +10,8 @@
         "files": [
             "src/Helpers/app.php",
             "src/Helpers/http.php",
-            "src/Helpers/helpers.php"
+            "src/Helpers/helpers.php",
+            "src/Helpers/string.php"
         ]
     },
     "scripts": {
