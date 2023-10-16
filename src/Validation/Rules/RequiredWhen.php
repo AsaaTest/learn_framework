@@ -2,6 +2,8 @@
 
 namespace Learn\Validation\Rules;
 
+use Learn\Validation\Exceptions\RuleParseException;
+
 /**
  * RequiredWhen Validation Rule
  *
@@ -58,6 +60,7 @@ class RequiredWhen implements ValidationRule
             "<" => $data[$this->otherField] < floatval($this->compareWith),
             ">=" => $data[$this->otherField] >= floatval($this->compareWith),
             "<=" => $data[$this->otherField] <= floatval($this->compareWith),
+            default => throw new RuleParseException("Unknow required_when operator: $this->operator")
         };
 
         // The field is required if the specified conditions are met, and it is not empty.
