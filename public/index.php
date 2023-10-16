@@ -52,13 +52,13 @@ Route::get('/html', fn (Request $request) => view('home', ['user' => 'Pedro']));
 
 Route::post('/validate', fn (Request $request) => json($request->validate(
     [
-        'test' => Rule::required(),
-        'num' => Rule::number(),
-        'email' => [Rule::required(), Rule::email()]
+        'test' => 'required',
+        'num' => 'number',
+        'email' => ['required_with:num', 'email']
     ],
     [
         'email' => [
-            Required::class => 'DAME EL CAMPO'
+            'email' => 'DAME EL 2CAMPO'
         ]
     ]
 )));
