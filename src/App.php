@@ -97,10 +97,11 @@ class App
         } catch (Throwable $e) {
             // Handle unhandled exceptions by sending a JSON response with error message and trace.
             $response = json([
+                "error" => $e::class,
                 "message" => $e->getMessage(),
                 "trace" => $e->getTrace()
             ]);
-            $this->abort($response);
+            $this->abort($response->setStatus(500));
         }
     }
 
