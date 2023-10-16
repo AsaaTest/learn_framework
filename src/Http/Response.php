@@ -2,6 +2,9 @@
 
 namespace Learn\Http;
 
+use Learn\App;
+use Learn\Container\Container;
+
 class Response
 {
     /**
@@ -175,5 +178,13 @@ class Response
         return (new self())
             ->setStatus(302) // Set the HTTP status code for redirection (302 Found).
             ->setHeader("Location", $uri); // Set the "Location" header to specify the redirection target.
+    }
+
+    public static function view(string $viewName, array $params = [], $layout = null): self
+    {
+        $content = Container::resolve(App::class)->view->render($viewName, $params, $layout);
+        return (new self())
+            ->setContentType("text/html")
+            ->setContent($content);
     }
 }
