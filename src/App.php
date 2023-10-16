@@ -9,6 +9,8 @@ use Learn\Http\Response;
 use Learn\Routing\Router;
 use Learn\Server\PhpNativeServer;
 use Learn\Server\Server;
+use Learn\View\LearnEngine;
+use Learn\View\View;
 
 /**
  * Main application class responsible for handling HTTP requests and responses.
@@ -44,6 +46,13 @@ class App
     public Server $server;
 
     /**
+     * View engine
+     *
+     * @var View
+     */
+    public View $view;
+
+    /**
      * Bootstrap method.
      *
      * Initializes and configures the application.
@@ -56,6 +65,7 @@ class App
         $app->router = new Router();
         $app->server = new PhpNativeServer();
         $app->request = $app->server->getRequest();
+        $app->view = new LearnEngine(__DIR__."/../views");
         return $app;
     }
 
