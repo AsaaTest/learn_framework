@@ -109,4 +109,17 @@ class Route
         // Combine parameter names with the extracted values and return an associative array.
         return array_combine($this->parameters, array_slice($arguments, 1));
     }
+
+    public static function get(string $uri, \Closure|array $action): Route
+    {
+        return Container::resolve(App::class)->router->get($uri, $action);
+    }
+
+
+    public static function post(string $uri, \Closure|array $action): Route
+    {
+        return Container::resolve(App::class)->router->post($uri, $action);
+    }
+
+
 }
