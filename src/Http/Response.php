@@ -55,7 +55,6 @@ class Response
      */
     public function headers(?string $key = null): array|string|null
     {
-        return $this->headers;
         if (is_null($key)) {
             return $this->headers;
         }
