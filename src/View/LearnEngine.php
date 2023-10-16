@@ -73,6 +73,10 @@ class LearnEngine implements View
      */
     protected function phpFileOutput(string $phpFile, array $params = []): string
     {
+        // verify view exist
+        if(!file_exists($phpFile)) {
+            return "View $phpFile Not Found";
+        }
         // Extract parameters as variables and capture the output of the included file.
         foreach($params as $param => $value) {
             $$param = $value;
