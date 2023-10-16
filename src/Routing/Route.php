@@ -2,9 +2,6 @@
 
 namespace Learn\Routing;
 
-use Learn\App;
-use Learn\Container\Container;
-
 class Route
 {
     /**
@@ -165,7 +162,7 @@ class Route
     public static function get(string $uri, \Closure|array $action): Route
     {
         // Resolve the current application instance from the container and access its router.
-        $router = Container::resolve(App::class)->router;
+        $router = app()->router;
 
         // Define a new GET route using the provided URI pattern and action.
         return $router->get($uri, $action);
@@ -181,7 +178,7 @@ class Route
     public static function post(string $uri, \Closure|array $action): Route
     {
         // Resolve the current application instance from the container and access its router.
-        $router = Container::resolve(App::class)->router;
+        $router = app()->router;
 
         // Define a new POST route using the provided URI pattern and action.
         return $router->post($uri, $action);
@@ -197,7 +194,7 @@ class Route
     public static function put(string $uri, \Closure|array $action): Route
     {
         // Resolve the current application instance from the container and access its router.
-        $router = Container::resolve(App::class)->router;
+        $router = app()->router;
 
         // Define a new PUT route using the provided URI pattern and action.
         return $router->put($uri, $action);
@@ -213,7 +210,7 @@ class Route
     public static function patch(string $uri, \Closure|array $action): Route
     {
         // Resolve the current application instance from the container and access its router.
-        $router = Container::resolve(App::class)->router;
+        $router = app()->router;
 
         // Define a new PATCH route using the provided URI pattern and action.
         return $router->patch($uri, $action);
@@ -229,7 +226,7 @@ class Route
     public static function delete(string $uri, \Closure|array $action): Route
     {
         // Resolve the current application instance from the container and access its router.
-        $router = Container::resolve(App::class)->router;
+        $router = app()->router;
 
         // Define a new DELETE route using the provided URI pattern and action.
         return $router->delete($uri, $action);
