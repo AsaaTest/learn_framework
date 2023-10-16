@@ -14,17 +14,17 @@ require_once '../vendor/autoload.php';
 $app = App::bootstrap();
 
 // Define routes using the application's router.
-$app->router->get('/test/{test}', function (Request $request) {
+Route::get('/test/{test}', function (Request $request) {
     // Define a route that responds to GET requests with JSON data containing route parameters.
     return json($request->routeParameters());
 });
 
-$app->router->get('/redirect', function (Request $request) {
+Route::get('/redirect', function (Request $request) {
     // Define a route that responds to GET requests by redirecting to another route.
     return redirect('/test/4');
 });
 
-$app->router->post('/test', function (Request $request) {
+Route::post('/test', function (Request $request) {
     // Define a route that responds to POST requests with JSON data containing query parameters.
     return json($request->query());
 });
