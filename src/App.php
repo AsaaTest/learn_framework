@@ -9,6 +9,7 @@ use Learn\Routing\Router;
 use Learn\Server\PhpNativeServer;
 use Learn\Server\Server;
 use Learn\Validation\Exceptions\ValidationException;
+use Learn\Validation\Rule;
 use Learn\View\LearnEngine;
 use Learn\View\View;
 use Throwable;
@@ -67,6 +68,7 @@ class App
         $app->server = new PhpNativeServer();
         $app->request = $app->server->getRequest();
         $app->view = new LearnEngine(__DIR__ . "/../views");
+        Rule::loadDefaultRules();
         return $app;
     }
 
