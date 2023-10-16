@@ -55,12 +55,23 @@ class Validator
 
             // Validate the field against each of its rules.
             foreach ($rules as $rule) {
-                if(is_string($rule)) {
-                    $rule = Rule::from($rule);
-                }
-                if (!$rule->isValid($field, $this->data)) {
-                    $message = $messages[$field][Rule::nameOf($rule)] ?? $rule->message();
-                    $fieldUnderValidationErrors[Rule::nameOf($rule)] = $message;
+                if (is_string($rule)) {
+                    $new_rules = explode('|', $rule); // If the rule is a string, split it into multiple rules
+                    foreach ($new_rules as $rule_string) {
+                        $rule = Rule::from($rule_string); // Convert the string into an instance of the rule
+                        if (!$rule->isValid($field, $this->data)) {
+                            // If the rule is not valid for the field, get the corresponding message or the default message
+                            $message = $messages[$field][Rule::nameOf($rule)] ?? $rule->message();
+                            $fieldUnderValidationErrors[Rule::nameOf($rule)] = $message;
+                        }
+                    }
+                } else {
+                    // If the rule is an instance of Rule, validate it directly
+                    if (!$rule->isValid($field, $this->data)) {
+                        // If the rule is not valid for the field, get the corresponding message or the default message
+                        $message = $messages[$field][Rule::nameOf($rule)] ?? $rule->message();
+                        $fieldUnderValidationErrors[Rule::nameOf($rule)] = $message;
+                    }
                 }
             }
 
