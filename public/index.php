@@ -10,26 +10,23 @@ use Learn\Routing\Route;
 // Require the Composer autoload file.
 require_once '../vendor/autoload.php';
 
-// Require custom helper functions.
-require_once '../src/Helpers/helpers.php';
-
 // Bootstrap the application, initializing it.
 $app = App::bootstrap();
 
 // Define routes using the application's router.
 $app->router->get('/test/{test}', function (Request $request) {
     // Define a route that responds to GET requests with JSON data containing route parameters.
-    return Response::json($request->routeParameters());
+    return json($request->routeParameters());
 });
 
 $app->router->get('/redirect', function (Request $request) {
     // Define a route that responds to GET requests by redirecting to another route.
-    return Response::redirect('/test/4');
+    return redirect('/test/4');
 });
 
 $app->router->post('/test', function (Request $request) {
     // Define a route that responds to POST requests with JSON data containing query parameters.
-    return Response::json($request->query());
+    return json($request->query());
 });
 
 class AuthMiddleware implements Middleware
@@ -37,7 +34,7 @@ class AuthMiddleware implements Middleware
     public function handle(Request $request, Closure $next): Response
     {
         if($request->headers('Authorization') != 'test') {
-            return Response::json(['msg' => 'not autorizated'])->setStatus(401);
+            return json(['msg' => 'not autorizated'])->setStatus(401);
         }
         $response = $next($request);
         $response->setHeader('X-Test-Custom-Header', 'hola');
@@ -46,10 +43,10 @@ class AuthMiddleware implements Middleware
 }
 
 
-Route::get('/middlewares', fn (Request $request) => Response::json(['msg' => 'ok middleware']))
+Route::get('/middlewares', fn (Request $request) => json(['msg' => 'ok middleware']))
     ->setMiddlewares([AuthMiddleware::class]);
 
-Route::get('/html', fn (Request $request) => Response::view('home', ['user' => 'Pedro']));
+Route::get('/html', fn (Request $request) => view('home', ['user' => 'Pedro']));
 
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
 $app->run();
