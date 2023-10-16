@@ -3,6 +3,7 @@
 namespace Learn\Http;
 
 use Learn\Routing\Route;
+use Learn\Validation\Validator;
 
 /**
  * Represents an HTTP Request.
@@ -216,5 +217,24 @@ class Request
         }
 
         return $parameters[$key] ?? null;
+    }
+
+    /**
+     * Validate the data against a set of validation rules.
+     *
+     * This method initiates the validation process by creating a Validator instance with the provided data.
+     * It then proceeds to apply the specified validation rules to the data and returns the validation results.
+     *
+     * @param array $rules An array of validation rules to apply to the data.
+     * @param array $messages (Optional) Custom error messages for validation failures.
+     * @return array An array of validation results, including validation failures and error messages.
+     */
+    public function validate(array $rules, array $messages = []): array
+    {
+        // Create a new Validator instance, passing in the data to be validated.
+        $validator = new Validator($this->data);
+
+        // Validate the data using the specified rules and custom error messages (if provided).
+        return $validator->validate($rules, $messages);
     }
 }
