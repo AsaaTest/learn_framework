@@ -13,6 +13,12 @@ interface SessionStorage
     public function start();
 
     /**
+     * Function to save session
+     *
+     * @return void
+     */
+    public function save();
+    /**
      * Get the unique identifier for the session.
      *
      * @return string The session identifier.
