@@ -63,5 +63,10 @@ Route::post('/validate', fn (Request $request) => json($request->validate(
     ]
 )));
 
+Route::get('/session', function (Request $request) {
+    session()->remove('test');
+    return json(['id' => session()->id(), 'test' => session()->get('test', 'por defecto')]);
+});
+
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
 $app->run();
