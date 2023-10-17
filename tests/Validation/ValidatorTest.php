@@ -85,21 +85,27 @@ class ValidatorTest extends TestCase
         $email = new Email();
         $required = new Required();
         $number = new Number();
+        $number_test = new Number();
 
         $data = ["email" => "test@", "num1" => "not a number"];
 
         $rules = [
             "email" => $email,
             "num1" => $number,
-            "num2" => [$required, $number],
+            "num2" => [$required, $number_test],
         ];
+
+        $email->attribute = 'email';
+        $number->attribute = 'num1';
+        $number_test->attribute = 'num2';
+        $required->attribute = 'num2';
 
         $expected = [
             "email" => ["email" => $email->message()],
             "num1" => ["number" => $number->message()],
             "num2" => [
                 "required" => $required->message(),
-                "number" => $number->message()
+                "number" => $number_test->message()
             ],
         ];
 
