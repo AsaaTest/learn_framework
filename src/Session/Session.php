@@ -15,6 +15,11 @@ class Session
     protected SessionStorage $storage;
 
     /**
+     * Key for flas session
+     */
+    public const FLASH_KEY = '_flash';
+
+    /**
      * Create a new instance of the `Session` class with the specified session storage.
      *
      * @param SessionStorage $storage The session storage implementation to use.
@@ -23,6 +28,41 @@ class Session
     {
         $this->storage = $storage;
         $this->storage->start();
+
+        // Check if the session storage has the FLASH_KEY.
+        if (!$this->storage->has(self::FLASH_KEY)) {
+            // If not, initialize it with empty 'old' and 'new' arrays for flash data.
+            $this->storage->set(self::FLASH_KEY, ['old' => [], 'new' => []]);
+        }
+    }
+
+    /**
+     * The destructor method is called when the `Session` object is destroyed.
+     * It's responsible for cleaning up old flash data, aging flash data, and saving changes to the session storage.
+     */
+    public function __destruct()
+    {
+        // Remove keys associated with old flash data.
+        foreach ($this->storage->get(self::FLASH_KEY)['old'] as $key) {
+            $this->storage->remove($key);
+        }
+
+        // Age the flash data by moving 'new' data to 'old' and clearing 'new'.
+        $this->ageFlashData();
+
+        // Save any changes made to the session storage.
+        $this->storage->save();
+    }
+
+    /**
+     * Age the flash data by moving 'new' data to 'old' and clearing 'new' for the next request.
+     */
+    public function ageFlashData()
+    {
+        $flash = $this->storage->get(self::FLASH_KEY);
+        $flash['old'] = $flash['new'];
+        $flash['new'] = [];
+        $this->storage->set(self::FLASH_KEY, $flash);
     }
 
     /**
@@ -33,7 +73,10 @@ class Session
      */
     public function flash(string $key, mixed $value)
     {
-        // Flashing functionality may be implemented here.
+        $this->storage->set($key, $value);
+        $flash = $this->storage->get(self::FLASH_KEY);
+        $flash['new'][] = $key;
+        $this->storage->set(self::FLASH_KEY, $flash);
     }
 
     /**
