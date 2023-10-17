@@ -10,13 +10,18 @@ namespace Learn\Validation\Rules;
 class Email implements ValidationRule
 {
     /**
+     * name attribute for message
+     */
+    public string $attribute;
+
+    /**
      * Get the validation error message.
      *
      * @return string The error message to display when validation fails.
      */
     public function message(): string
     {
-        return 'The :attribute must be a valid email address.';
+        return "The field {$this->attribute} must be a valid email address.";
     }
 
     /**
@@ -28,6 +33,7 @@ class Email implements ValidationRule
      */
     public function isValid(string $field, array $data): bool
     {
+        $this->attribute = $field;
         if(!array_key_exists($field, $data)) {
             return false;
         }

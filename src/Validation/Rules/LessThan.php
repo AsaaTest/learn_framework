@@ -17,6 +17,11 @@ class LessThan implements ValidationRule
     private float $lessThan;
 
     /**
+     * name attribute for message
+     */
+    public string $attribute;
+
+    /**
      * Create a new LessThan validation rule instance.
      *
      * @param float $lessThan The maximum value that the field's value should be less than.
@@ -33,7 +38,7 @@ class LessThan implements ValidationRule
      */
     public function message(): string
     {
-        return "The :attribute must be a numeric value less than {$this->lessThan}.";
+        return "The field {$this->attribute} must be a numeric value less than {$this->lessThan}.";
     }
 
     /**
@@ -45,6 +50,7 @@ class LessThan implements ValidationRule
      */
     public function isValid(string $field, array $data): bool
     {
+        $this->attribute = $field;
         // Check if the field exists in the input data and is a numeric value less than $this->lessThan.
         return isset($data[$field]) && is_numeric($data[$field]) && $data[$field] < $this->lessThan;
     }

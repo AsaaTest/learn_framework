@@ -10,13 +10,18 @@ namespace Learn\Validation\Rules;
 class Number implements ValidationRule
 {
     /**
+     * name attribute for message
+     */
+    public string $attribute;
+
+    /**
      * Get the validation error message.
      *
      * @return string The error message to display when validation fails.
      */
     public function message(): string
     {
-        return "The :attribute must be a valid numeric value.";
+        return "The field {$this->attribute} must be a valid numeric value.";
     }
 
     /**
@@ -28,6 +33,7 @@ class Number implements ValidationRule
      */
     public function isValid(string $field, array $data): bool
     {
+        $this->attribute = $field;
         // Check if the field exists in the input data and if its value is a valid numeric value.
         return isset($data[$field]) && is_numeric($data[$field]);
     }

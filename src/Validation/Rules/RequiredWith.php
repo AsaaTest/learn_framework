@@ -10,6 +10,11 @@ namespace Learn\Validation\Rules;
 class RequiredWith implements ValidationRule
 {
     /**
+     * name attribute for message
+     */
+    public string $attribute;
+
+    /**
      * The name of the related field that triggers the requirement of this field.
      *
      * @var string
@@ -34,7 +39,7 @@ class RequiredWith implements ValidationRule
      */
     public function message(): string
     {
-        return "The :attribute field is required when :other {$this->withField} is :value.";
+        return "The field {$this->attribute} is required when {$this->withField} exist.";
     }
 
     /**
@@ -46,6 +51,7 @@ class RequiredWith implements ValidationRule
      */
     public function isValid(string $field, array $data): bool
     {
+        $this->attribute = $field;
         // Check if the related field exists and is not empty.
         if (isset($data[$this->withField]) && $data[$this->withField] !== "") {
             // The field is required if it exists and is not empty.

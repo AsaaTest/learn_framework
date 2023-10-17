@@ -12,6 +12,10 @@ use Learn\Validation\Exceptions\RuleParseException;
 class RequiredWhen implements ValidationRule
 {
     /**
+     * name attribute for message
+     */
+    public string $attribute;
+    /**
      * Create a new RequiredWhen instance.
      *
      * @param string $otherField The name of the other field to compare.
@@ -36,7 +40,7 @@ class RequiredWhen implements ValidationRule
      */
     public function message(): string
     {
-        return "This field is required when $this->otherField $this->operator $this->compareWith";
+        return "The field {$this->attribute} is required when $this->otherField $this->operator $this->compareWith";
     }
 
     /**
@@ -48,6 +52,7 @@ class RequiredWhen implements ValidationRule
      */
     public function isValid($field, $data): bool
     {
+        $this->attribute = $field;
         // Check if the other field exists in the input data.
         if (!array_key_exists($this->otherField, $data)) {
             return false;

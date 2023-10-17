@@ -10,13 +10,18 @@ namespace Learn\Validation\Rules;
 class Required implements ValidationRule
 {
     /**
+     * name attribute for message
+     */
+    public string $attribute;
+
+    /**
      * Get the validation error message.
      *
      * @return string The error message to display when validation fails.
      */
     public function message(): string
     {
-        return "The :attribute field is required.";
+        return "The field {$this->attribute} is required.";
     }
 
     /**
@@ -28,6 +33,7 @@ class Required implements ValidationRule
      */
     public function isValid(string $field, array $data): bool
     {
+        $this->attribute = $field;
         // Check if the field exists in the input data and if its value is not empty (not equal to an empty string).
         return isset($data[$field]) && $data[$field] !== '';
     }
