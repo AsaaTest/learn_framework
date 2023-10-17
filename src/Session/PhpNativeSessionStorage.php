@@ -20,6 +20,15 @@ class PhpNativeSessionStorage implements SessionStorage
     }
 
     /**
+     * Method save sseion
+     *
+     * @return void
+     */
+    public function save()
+    {
+        session_write_close();
+    }
+    /**
      * Get the unique identifier for the session.
      *
      * @return string The session identifier.
