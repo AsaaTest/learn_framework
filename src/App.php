@@ -8,6 +8,8 @@ use Learn\Http\Response;
 use Learn\Routing\Router;
 use Learn\Server\PhpNativeServer;
 use Learn\Server\Server;
+use Learn\Session\PhpNativeSessionStorage;
+use Learn\Session\Session;
 use Learn\Validation\Exceptions\ValidationException;
 use Learn\Validation\Rule;
 use Learn\View\LearnEngine;
@@ -55,6 +57,13 @@ class App
     public View $view;
 
     /**
+     * Session
+     *
+     * @var Session
+     */
+    public Session $session;
+
+    /**
      * Bootstrap method.
      *
      * Initializes and configures the application.
@@ -68,6 +77,7 @@ class App
         $app->server = new PhpNativeServer();
         $app->request = $app->server->getRequest();
         $app->view = new LearnEngine(__DIR__ . "/../views");
+        $app->session = new Session(new PhpNativeSessionStorage());
         Rule::loadDefaultRules();
         return $app;
     }
