@@ -26,6 +26,16 @@ function redirect(string $uri): Response
 }
 
 /**
+ * Return to previous url
+ *
+ * @return Response
+ */
+function back(): Response
+{
+    return redirect(session()->get('_previous', '/'));
+}
+
+/**
  * Create and return a response for rendering a view template.
  *
  * @param string $viewName Name of the view template to render.
