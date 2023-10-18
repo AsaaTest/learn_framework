@@ -69,5 +69,13 @@ Route::get('/session', function (Request $request) {
     return json($_SESSION);
 });
 
+Route::get('/form', fn (Request $request) => view('form'));
+Route::post('/form', function (Request $request) {
+    return json($request->validate([
+        'email' => 'email',
+        'name' => 'required|number'
+    ]));
+});
+
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
 $app->run();
