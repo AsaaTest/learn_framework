@@ -5,30 +5,30 @@ namespace Learn\Http;
 class Response
 {
     /**
-     * status of response
+     * HTTP status code of the response.
      *
-     * @var integer
+     * @var int
      */
     protected int $status = 200;
 
     /**
-     * headers of response
+     * HTTP headers of the response.
      *
      * @var array
      */
     protected array $headers = [];
 
     /**
-     * content of response
+     * Content of the response.
      *
      * @var string|null
      */
     protected ?string $content = null;
 
     /**
-     * getter status
+     * Get the HTTP status code of the response.
      *
-     * @return integer
+     * @return int The HTTP status code.
      */
     public function status(): int
     {
@@ -36,10 +36,10 @@ class Response
     }
 
     /**
-     * setter status
+     * Set the HTTP status code of the response.
      *
-     * @param integer $status
-     * @return self
+     * @param int $status The HTTP status code to set.
+     * @return self The Response instance.
      */
     public function setStatus(int $status): self
     {
@@ -48,26 +48,25 @@ class Response
     }
 
     /**
-     * getter headers
+     * Get the HTTP headers of the response, or a specific header by key.
      *
-     * @param string|null $key
-     * @return array|string|null
+     * @param string|null $key The header key (optional).
+     * @return array|string|null The headers or a specific header value.
      */
     public function headers(?string $key = null): array|string|null
     {
         if (is_null($key)) {
             return $this->headers;
         }
-
         return $this->headers[strtolower($key)] ?? null;
     }
 
     /**
-     * setter headers
+     * Set an HTTP header for the response.
      *
-     * @param string $header
-     * @param string $value
-     * @return self
+     * @param string $header The header name.
+     * @param string $value The header value.
+     * @return self The Response instance.
      */
     public function setHeader(string $header, string $value): self
     {
@@ -76,10 +75,9 @@ class Response
     }
 
     /**
-     * remove header
+     * Remove an HTTP header from the response.
      *
-     * @param string $header header to remove
-     * @return void
+     * @param string $header The header to remove.
      */
     public function removeHeader(string $header)
     {
@@ -87,10 +85,10 @@ class Response
     }
 
     /**
-     * set type of content
+     * Set the content type for the response.
      *
-     * @param string $value
-     * @return self
+     * @param string $value The content type.
+     * @return self The Response instance.
      */
     public function setContentType(string $value): self
     {
@@ -99,9 +97,9 @@ class Response
     }
 
     /**
-     * getter content
+     * Get the content of the response.
      *
-     * @return string|null
+     * @return string|null The response content.
      */
     public function content(): ?string
     {
@@ -109,10 +107,10 @@ class Response
     }
 
     /**
-     * setter content
+     * Set the content of the response.
      *
-     * @param string $content
-     * @return self
+     * @param string $content The response content.
+     * @return self The Response instance.
      */
     public function setContent(string $content): self
     {
@@ -121,12 +119,7 @@ class Response
     }
 
     /**
-     * Prepare response
-     *
-     * remove headers if content is null
-     * definer content length depending of the content
-     *
-     * @return void
+     * Prepare the response, remove headers if content is null, and set the "Content-Length" header.
      */
     public function prepare()
     {
@@ -142,7 +135,7 @@ class Response
      * Create a new instance of the Response class with content in JSON format.
      *
      * @param array $data An array of data to be converted to JSON format.
-     * @return self An instance of the Response class with content in JSON format.
+     * @return self An instance of the Response class with JSON content.
      */
     public static function json(array $data): self
     {
@@ -154,7 +147,7 @@ class Response
     /**
      * Create a new instance of the Response class with plain text content.
      *
-     * @param string $text Text to set as content.
+     * @param string $text The text to set as content.
      * @return self An instance of the Response class with plain text content.
      */
     public static function text(string $text): self
@@ -165,7 +158,7 @@ class Response
     }
 
     /**
-     * Create a new instance of the Response class to redirect to another URI.
+     * Create a new instance of the Response class for redirection to another URI.
      *
      * @param string $uri The URI to which the response should be redirected.
      * @return self An instance of the Response class for redirection.
@@ -177,11 +170,34 @@ class Response
             ->setHeader("Location", $uri); // Set the "Location" header to specify the redirection target.
     }
 
+    /**
+     * Create a new instance of the Response class with a view's rendered content.
+     *
+     * @param string $viewName The name of the view.
+     * @param array $params An array of parameters to pass to the view.
+     * @param mixed $layout The layout to use (optional).
+     * @return self An instance of the Response class with HTML content.
+     */
     public static function view(string $viewName, array $params = [], $layout = null): self
     {
         $content = app()->view->render($viewName, $params, $layout);
         return (new self())
             ->setContentType("text/html")
             ->setContent($content);
+    }
+
+    /**
+     * Set response status to an error code and flash error messages.
+     *
+     * @param array $errors An array of error messages.
+     * @param int $status The HTTP status code for the response.
+     * @return self The Response instance.
+     */
+    public function withErrors(array $errors, int $status = 400): self
+    {
+        $this->setStatus($status);
+        session()->flash('_errors', $errors);
+        session()->flash('_old', request()->data());
+        return $this;
     }
 }
