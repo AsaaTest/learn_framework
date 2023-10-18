@@ -17,7 +17,7 @@ use Learn\View\View;
 use Throwable;
 
 /**
- * Main application class responsible for handling HTTP requests and responses.
+ * The main application class responsible for handling HTTP requests and responses.
  */
 class App
 {
@@ -83,6 +83,27 @@ class App
     }
 
     /**
+     * Prepare the next request, storing the previous URI in the session for GET requests.
+     */
+    public function prepareNextRequest()
+    {
+        if ($this->request->method() == 'GET') {
+            $this->session->set('_previous', $this->request->uri());
+        }
+    }
+
+    /**
+     * Terminate the current request by sending the specified response.
+     *
+     * @param Response $response The response to be sent to the client to terminate the request.
+     */
+    public function terminate(Response $response)
+    {
+        $this->prepareNextRequest();
+        $this->server->sendResponse($response);
+    }
+
+    /**
      * Run the application.
      *
      * This method is responsible for handling HTTP requests and responses. It resolves routes, processes exceptions,
@@ -95,17 +116,13 @@ class App
     public function run()
     {
         try {
-            // Resolve the requested route and obtain the response.
-            $response = $this->router->resolve($this->request);
-
-            // Send the response to the client.
-            $this->server->sendResponse($response);
+            $this->terminate($this->router->resolve($this->request));
         } catch (HttpNotFoundException $e) {
             // Handle HTTP 404 (Not Found) error by sending an appropriate response.
             $this->abort(Response::text("Not Found")->setStatus(404));
         } catch (ValidationException $e) {
             // Handle validation errors by sending a JSON response with validation error details (HTTP 422).
-            $this->abort(json($e->errors())->setStatus(422));
+            $this->abort(back()->withErrors($e->errors(), 422));
         } catch (Throwable $e) {
             // Handle unhandled exceptions by sending a JSON response with error message and trace.
             $response = json([
@@ -126,6 +143,6 @@ class App
      */
     public function abort(Response $response)
     {
-        $this->server->sendResponse($response);
+        $this->terminate($response);
     }
 }
