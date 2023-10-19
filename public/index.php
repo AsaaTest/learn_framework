@@ -2,6 +2,7 @@
 
 // Import the required classes and namespaces.
 use Learn\App;
+use Learn\Database\DB;
 use Learn\Http\Middleware;
 use Learn\Http\Request;
 use Learn\Http\Response;
@@ -75,6 +76,15 @@ Route::post('/form', function (Request $request) {
         'email' => 'email',
         'name' => 'required|number'
     ]));
+});
+
+Route::post('/create-user', function (Request $request) {
+    DB::statement('INSERT INTO users (name,email) VALUES (?,?)', [$request->data('name'), $request->data('email')]);
+    return json(['msg' => 'ok']);
+});
+
+Route::get('/users', function (Request $request) {
+    return json(DB::statement("SELECT * FROM users"));
 });
 
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
