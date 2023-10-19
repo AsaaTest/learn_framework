@@ -2,6 +2,8 @@
 
 namespace Learn;
 
+use Learn\Database\Drivers\DatabaseDriver;
+use Learn\Database\Drivers\PdoDriver;
 use Learn\Http\HttpNotFoundException;
 use Learn\Http\Request;
 use Learn\Http\Response;
@@ -63,6 +65,8 @@ class App
      */
     public Session $session;
 
+    public DatabaseDriver $database;
+
     /**
      * Bootstrap method.
      *
@@ -78,6 +82,8 @@ class App
         $app->request = $app->server->getRequest();
         $app->view = new LearnEngine(__DIR__ . "/../views");
         $app->session = new Session(new PhpNativeSessionStorage());
+        $app->database = new PdoDriver();
+        $app->database->connect('mysql', 'localhost', 3306, 'learn_framework', 'root', '');
         Rule::loadDefaultRules();
         return $app;
     }
@@ -101,6 +107,8 @@ class App
     {
         $this->prepareNextRequest();
         $this->server->sendResponse($response);
+        $this->database->close();
+        exit();
     }
 
     /**
