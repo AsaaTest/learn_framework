@@ -4,6 +4,7 @@ namespace Learn;
 
 use Learn\Database\Drivers\DatabaseDriver;
 use Learn\Database\Drivers\PdoDriver;
+use Learn\Database\Model;
 use Learn\Http\HttpNotFoundException;
 use Learn\Http\Request;
 use Learn\Http\Response;
@@ -68,25 +69,48 @@ class App
     public DatabaseDriver $database;
 
     /**
-     * Bootstrap method.
-     *
-     * Initializes and configures the application.
-     *
-     * @return App The configured application instance.
-     */
+ * Bootstrap method.
+ *
+ * Initializes and configures the application.
+ *
+ * @return App The configured application instance.
+ */
     public static function bootstrap(): App
     {
+        // Create a new instance of the App class or return an existing one.
         $app = singleton(self::class);
+
+        // Initialize the router for the application.
         $app->router = new Router();
+
+        // Initialize the server for the application using the PHP native server.
         $app->server = new PhpNativeServer();
+
+        // Get the current HTTP request using the server.
         $app->request = $app->server->getRequest();
+
+        // Initialize the view engine for rendering views.
         $app->view = new LearnEngine(__DIR__ . "/../views");
+
+        // Initialize the session using the PHP native session storage.
         $app->session = new Session(new PhpNativeSessionStorage());
+
+        // Initialize the database driver as a PDO driver.
         $app->database = new PdoDriver();
+
+        // Connect to the database with specific details (e.g., MySQL on localhost).
         $app->database->connect('mysql', 'localhost', 3306, 'learn_framework', 'root', '');
+
+        // Set the database driver for the Model class, allowing it to interact with the database.
+        Model::setDatabaseDriver($app->database);
+
+        // Load the default validation rules for the Rule class.
         Rule::loadDefaultRules();
+
+        // Return the configured application instance.
         return $app;
     }
+
 
     /**
      * Prepare the next request, storing the previous URI in the session for GET requests.
