@@ -3,6 +3,7 @@
 // Import the required classes and namespaces.
 use Learn\App;
 use Learn\Database\DB;
+use Learn\Database\Model;
 use Learn\Http\Middleware;
 use Learn\Http\Request;
 use Learn\Http\Response;
@@ -85,6 +86,18 @@ Route::post('/create-user', function (Request $request) {
 
 Route::get('/users', function (Request $request) {
     return json(DB::statement("SELECT * FROM users"));
+});
+
+class User extends Model
+{
+}
+
+Route::post('/user/model', function (Request $request) {
+    $user = new User();
+    $user->name = $request->data('name');
+    $user->email = $request->data('email');
+    $user->save();
+    return json(['msg' => 'save']);
 });
 
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
