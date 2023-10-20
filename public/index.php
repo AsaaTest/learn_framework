@@ -90,14 +90,23 @@ Route::get('/users', function (Request $request) {
 
 class User extends Model
 {
+    protected array $fillable = [
+        "name",
+        "email"
+    ];
 }
 
 Route::post('/user/model', function (Request $request) {
-    $user = new User();
-    $user->name = $request->data('name');
-    $user->email = $request->data('email');
-    $user->save();
-    return json(['msg' => 'save']);
+    // $user = new User();
+    // $user->name = $request->data('name');
+    // $user->email = $request->data('email');
+    // $user->save();
+    return json(User::create($request->data())->toArray());
+});
+
+Route::get('/user/query', function (Request $request) {
+    // return json(User::find(4)->toArray());
+    return json(array_map(fn ($m) => $m->toArray(), User::where('name', 'cochi')));
 });
 
 // Run the application, which will handle incoming HTTP requests based on the defined routes.
