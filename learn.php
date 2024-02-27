@@ -16,6 +16,16 @@ $migrator = new Migrator(__DIR__ . "/database/migrations", __DIR__ . "/templates
 if ($argv[1] == "make:migration") {
     // Create a new migration file based on the provided migration name.
     $migrator->make($argv[2]);
-}else if($argv[1] == "migrate"){
+} else if ($argv[1] == "migrate") {
+    // Run the pending migrations.
     $migrator->migrate();
+} else if ($argv[1] == "rollback") {
+    // Check if the "--step" option is provided and get the step value.
+    $step = null;
+    if (count($argv) == 4 && ($argv[2] == "--step")) {
+        $step =  $argv[3];
+    }
+
+    // Rollback the last batch of migrations or a specific number of steps.
+    $migrator->rollback($step);
 }
