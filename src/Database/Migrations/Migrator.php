@@ -2,6 +2,8 @@
 
 namespace Learn\Database\Migrations;
 
+use Learn\Database\Drivers\DatabaseDriver;
+
 /**
  * The Migrator class is responsible for generating migration files for database schema changes.
  */
@@ -22,15 +24,75 @@ class Migrator
     private string $templatesDirectory;
 
     /**
+     * The database driver instance for executing database statements.
+     *
+     * @var DatabaseDriver
+     */
+    private DatabaseDriver $driver;
+
+    /**
      * Create a new Migrator instance.
      *
      * @param string $migrationsDirectory The directory for storing migration files.
      * @param string $templatesDirectory The directory for migration templates.
+     * @param DatabaseDriver $driver The database driver instance.
      */
-    public function __construct(string $migrationsDirectory, string $templatesDirectory)
+    public function __construct(string $migrationsDirectory, string $templatesDirectory, DatabaseDriver $driver)
     {
         $this->migrationsDirectory = $migrationsDirectory;
         $this->templatesDirectory = $templatesDirectory;
+        $this->driver = $driver;
+    }
+
+    /**
+     * Log a message to the console.
+     *
+     * @param string $message The message to be logged.
+     */
+    private function log(string $message)
+    {
+        print($message . PHP_EOL);
+    }
+
+    /**
+     * Create a "migrations" table in the database if it doesn't exist.
+     */
+    private function createMigrationsTableIfNotExists()
+    {
+        $this->driver->statement("CREATE TABLE IF NOT EXISTS migrations (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(256))");
+    }
+
+    /**
+     * Run pending migrations.
+     */
+    public function migrate()
+    {
+        // Create the "migrations" table if it doesn't exist.
+        $this->createMigrationsTableIfNotExists();
+
+        // Fetch already migrated migrations from the database.
+        $migrated = $this->driver->statement("SELECT * FROM migrations");
+
+        // Get a list of all available migration files.
+        $migrations = glob("$this->migrationsDirectory/*.php");
+
+        // Check if there are pending migrations to run.
+        if (count($migrated) >= count($migrations)) {
+            $this->log("Nothing to migrate");
+            return;
+        }
+
+        // Loop through pending migrations and execute them.
+        foreach (array_slice($migrations, count($migrated)) as $file) {
+            $migration = require $file;
+            $migration->up();
+            $name = basename($file);
+
+            // Record the migrated migration in the database.
+            $this->driver->statement("INSERT INTO migrations (name) VALUES (?)", [$name]);
+
+            $this->log("Migrated => $name");
+        }
     }
 
     /**
