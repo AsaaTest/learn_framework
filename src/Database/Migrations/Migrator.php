@@ -94,6 +94,51 @@ class Migrator
             $this->log("Migrated => $name");
         }
     }
+    /**
+ * Rollback the last batch of migrations or a specific number of steps.
+ *
+ * @param int|null $steps The number of steps to rollback. If null, rollback all pending migrations.
+ */
+    public function rollback(?int $steps = null)
+    {
+        // Create the "migrations" table if it doesn't exist.
+        $this->createMigrationsTableIfNotExists();
+
+        // Fetch already migrated migrations from the database.
+        $migrated = $this->driver->statement("SELECT * FROM migrations");
+
+        // Get the total number of pending migrations.
+        $pending = count($migrated);
+
+        // Check if there are no pending migrations.
+        if ($pending == 0) {
+            $this->log("Nothing to rollback");
+            return;
+        }
+
+        // If the number of steps is not specified or exceeds the total pending migrations, set it to all pending migrations.
+        if (is_null($steps) || $steps > $pending) {
+            $steps = $pending;
+        }
+
+        // Get the list of migration files in reverse order.
+        $migrations = array_slice(array_reverse(glob("$this->migrationsDirectory/*.php")), -$pending);
+
+        // Iterate through each migration file and perform the rollback.
+        foreach ($migrations as $file) {
+            $migration = require $file;
+            $migration->down(); // Call the "down" method of the migration to rollback.
+            $name = basename($file);
+            $this->driver->statement("DELETE FROM migrations WHERE name = ?", [$name]); // Remove the rolled-back migration from the "migrations" table.
+            $this->log("Rolled back => $name");
+
+            // Decrease the steps counter, and if it reaches 0, exit the loop.
+            if (--$steps == 0) {
+                break;
+            }
+        }
+    }
+
 
     /**
      * Generate a new migration file based on the given name.
