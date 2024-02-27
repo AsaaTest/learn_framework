@@ -20,7 +20,7 @@ function app($class = App::class)
  * @param string $class The name of the class to resolve as a singleton.
  * @return object|null The resolved singleton instance or null if not found.
  */
-function singleton(string $class)
+function singleton(string $class, string|callable|null $build = null)
 {
-    return Container::singleton($class);
+    return Container::singleton($class, $build);
 }

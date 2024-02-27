@@ -2,6 +2,8 @@
 
 namespace Learn\Database;
 
+use Learn\Database\Drivers\DatabaseDriver;
+
 /**
  * DB Class
  *
@@ -20,6 +22,6 @@ class DB
     public static function statement(string $query, array $bind = [])
     {
         // Delegate the statement execution to the application's database connection.
-        return app()->database->statement($query, $bind);
+        return app(DatabaseDriver::class)->statement($query, $bind);
     }
 }

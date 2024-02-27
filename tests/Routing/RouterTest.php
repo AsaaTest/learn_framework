@@ -188,7 +188,7 @@ class RouterTest extends TestCase
 
         // Register a GET route with middlewares, including a middleware that stops the stack.
         $router->get($uri, fn ($request) => $unreachableResponse)
-            ->setMiddlewares([$stopMiddleware, $middleware2]);
+            ->setMiddlewares([$stopMiddleware::class, $middleware2::class]);
 
         // Resolve the route with a mock request.
         $response = $router->resolve($this->createMockRequest($uri, 'GET'));

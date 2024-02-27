@@ -96,7 +96,7 @@ class App
         $app->session = new Session(new PhpNativeSessionStorage());
 
         // Initialize the database driver as a PDO driver.
-        $app->database = new PdoDriver();
+        $app->database = singleton(DatabaseDriver::class, PdoDriver::class);
 
         // Connect to the database with specific details (e.g., MySQL on localhost).
         $app->database->connect('mysql', 'localhost', 3306, 'learn_framework', 'root', '');
