@@ -164,7 +164,7 @@ class Migrator
         } elseif (preg_match("/.*(from|to)_(.*)_table/", $migrationName)) {
             // If it's an "alter" migration, extract the table name and update the template.
             $table = preg_replace_callback("/.*(from|to)_(.*)_table/", fn ($match) => $match[2], $migrationName);
-            $template = preg_replace('/\$UP|\$DOWN', "ALTER TABLE $table", $template);
+            $template = preg_replace('/\$UP|\$DOWN/', "ALTER TABLE $table", $template);
         } else {
             // If it's a custom migration, comment out the existing template.
             $template = preg_replace_callback("/DB::statement.*/", fn ($match) => "// {$match[0]}", $template);
